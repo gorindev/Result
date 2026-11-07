@@ -1,0 +1,28 @@
+name: Version bump
+
+# Gitflow: every release/* and hotfix/* branch gets its version bumped automatically.
+on:
+  push:
+    branches: ['release/**', 'hotfix/**']
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    # Avoid reacting to the bump commit itself
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: bump
+        run: .github/scripts/bump-version.sh "${GITHUB_REF_NAME}"
+      - name: Commit
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: bump version to ${{ steps.bump.outputs.version }}"
+          git push
