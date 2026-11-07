@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     tags: ['v*']
-  workflow_call:
+  workflow_dispatch: # started by tag-release.yml after it pushes the tag
 
 permissions:
   contents: read
@@ -12,11 +12,20 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+      - name: Check NUGET_USER
+        env:
+          NUGET_USER: ${{ secrets.NUGET_USER }}
+        run: |
+          if [ -z "$NUGET_USER" ]; then
+            echo "Set the release environment secret NUGET_USER to the nuget.org profile name (not an email)."
+            exit 1
+          fi
       - run: dotnet build -c Release
       - run: dotnet test -c Release --no-build
       - run: dotnet pack src/Gorin.Result -c Release --no-build
@@ -24,7 +33,7 @@ jobs:
         id: login
         uses: NuGet/login@v1
         with:
-          user: ${{ vars.NUGET_USER }}
+          user: ${{ secrets.NUGET_USER }}
       - name: Push to NuGet
         run: >
           dotnet nuget push "artifacts/*.nupkg"
