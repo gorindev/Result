@@ -81,6 +81,26 @@ public class ErrorTests
     }
 
     [Fact]
+    public void CreateError_WhenNotImplementedError_ShouldHaveErrorTypeNotImplemented()
+    {
+        // Act
+        Error error = Error.NotImplemented(ErrorCode, ErrorDescription, Dictionary);
+
+        // Assert
+        ValidateError(error, expectedErrorType: ErrorType.NotImplemented);
+    }
+
+    [Fact]
+    public void CreateError_WhenServiceUnavailableError_ShouldHaveErrorTypeServiceUnavailable()
+    {
+        // Act
+        Error error = Error.ServiceUnavailable(ErrorCode, ErrorDescription, Dictionary);
+
+        // Assert
+        ValidateError(error, expectedErrorType: ErrorType.ServiceUnavailable);
+    }
+
+    [Fact]
     public void CreateError_WhenCustomType_ShouldHaveCustomErrorType()
     {
         // Act

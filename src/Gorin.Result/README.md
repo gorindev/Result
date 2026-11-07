@@ -66,6 +66,8 @@ A readonly record struct with `Code`, `Description`, `Type` (`ErrorType`), `Nume
 Error.Validation("User.Email", "Invalid email format.");
 Error.NotFound("Order.123", "Order not found.");
 Error.Forbidden("User.Banned", "Account is suspended.");
+Error.NotImplemented("Export.Pdf", "PDF export is not available yet.");
+Error.ServiceUnavailable("Payments.Gateway", "Payment provider is unreachable.");
 Error.Unauthorized();
 Error.Conflict();
 Error.Failure();
@@ -73,7 +75,7 @@ Error.Unexpected();
 Error.Custom(42, "Custom.Code", "A custom error type.");
 ```
 
-`ErrorType` values: `Failure`, `Unexpected`, `Validation`, `Conflict`, `NotFound`, `Unauthorized`, `Forbidden`.
+`ErrorType` values: `Failure`, `Unexpected`, `Validation`, `Conflict`, `NotFound`, `Unauthorized`, `Forbidden`, `NotImplemented`, `ServiceUnavailable`.
 
 ### Semantic success types
 
@@ -198,6 +200,8 @@ return result.Match(
         ErrorType.Unauthorized => Results.Unauthorized(),
         ErrorType.Forbidden    => Results.Forbid(),
         ErrorType.Conflict     => Results.Conflict(errors[0].Description),
+        ErrorType.NotImplemented     => Results.Problem(errors[0].Description, statusCode: 501),
+        ErrorType.ServiceUnavailable => Results.Problem(errors[0].Description, statusCode: 503),
         _                      => Results.Problem(errors[0].Description)
     });
 ```

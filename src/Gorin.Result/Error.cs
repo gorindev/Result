@@ -124,6 +124,30 @@ public readonly record struct Error
         new(code, description, ErrorType.Forbidden, metadata);
 
     /// <summary>
+    /// Creates an <see cref="Error"/> of type <see cref="ErrorType.NotImplemented"/> from a code and description.
+    /// </summary>
+    /// <param name="code">The unique error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <param name="metadata">A dictionary which provides optional space for information.</param>
+    public static Error NotImplemented(
+        string code = "General.NotImplemented",
+        string description = "A 'Not Implemented' error has occurred.",
+        Dictionary<string, object>? metadata = null) =>
+        new(code, description, ErrorType.NotImplemented, metadata);
+
+    /// <summary>
+    /// Creates an <see cref="Error"/> of type <see cref="ErrorType.ServiceUnavailable"/> from a code and description.
+    /// </summary>
+    /// <param name="code">The unique error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <param name="metadata">A dictionary which provides optional space for information.</param>
+    public static Error ServiceUnavailable(
+        string code = "General.ServiceUnavailable",
+        string description = "A 'Service Unavailable' error has occurred.",
+        Dictionary<string, object>? metadata = null) =>
+        new(code, description, ErrorType.ServiceUnavailable, metadata);
+
+    /// <summary>
     /// Creates an <see cref="Error"/> with the given numeric <paramref name="type"/>,
     /// <paramref name="code"/>, and <paramref name="description"/>.
     /// </summary>

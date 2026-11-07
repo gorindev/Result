@@ -83,6 +83,8 @@ A readonly record struct representing a single failure.
 Error.Validation("User.Email", "Invalid email format.");
 Error.NotFound("Order.123", "Order not found.");
 Error.Forbidden("User.Banned", "Account is suspended.");
+Error.NotImplemented("Export.Pdf", "PDF export is not available yet.");
+Error.ServiceUnavailable("Payments.Gateway", "Payment provider is unreachable.");
 Error.Unauthorized();
 Error.Conflict();
 Error.Failure();
@@ -102,15 +104,17 @@ Each error exposes:
 
 ### `ErrorType`
 
-| Value          | Typical use                            |
-| -------------- | -------------------------------------- |
-| `Failure`      | General business-rule failure          |
-| `Unexpected`   | Unhandled or system-level failure      |
-| `Validation`   | Input or state validation failure      |
-| `Conflict`     | Resource conflict (e.g. duplicate key) |
-| `NotFound`     | Resource does not exist                |
-| `Unauthorized` | Caller is not authenticated            |
-| `Forbidden`    | Caller lacks permission                |
+| Value                | Typical use                            |
+| -------------------- | -------------------------------------- |
+| `Failure`            | General business-rule failure          |
+| `Unexpected`         | Unhandled or system-level failure      |
+| `Validation`         | Input or state validation failure      |
+| `Conflict`           | Resource conflict (e.g. duplicate key) |
+| `NotFound`           | Resource does not exist                |
+| `Unauthorized`       | Caller is not authenticated            |
+| `Forbidden`          | Caller lacks permission                |
+| `NotImplemented`     | Feature or operation not implemented   |
+| `ServiceUnavailable` | Required service is unavailable        |
 
 ### Semantic success types
 
@@ -315,6 +319,10 @@ return result.Match(
         ErrorType.Unauthorized => Results.Unauthorized(),
         ErrorType.Forbidden    => Results.Forbid(),
         ErrorType.Conflict     => Results.Conflict(errors[0].Description),
+        ErrorType.NotImplemented     => Results.Problem(errors[0].Description, statusCode: 501),
+        ErrorType.ServiceUnavailable => Results.Problem(errors[0].Description, statusCode: 503),
+        ErrorType.NotImplemented => Results.Problem(errors[0].Description, statusCode: 501),
+        ErrorType.ServiceUnavailable => Results.Problem(errors[0].Description, statusCode: 503),
         _                      => Results.Problem(errors[0].Description)
     });
 ```

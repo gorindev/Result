@@ -12,7 +12,7 @@
 
   <PropertyGroup>
     <PackageId>Gorin.Result</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Joel Gorin</Authors>
     <Copyright>Copyright (c) Joel Gorin</Copyright>
     <Description>A lightweight, zero-dependency .NET library for modeling success and failure without exceptions.</Description>
