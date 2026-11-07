@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Gorin.Result/Gorin.Result.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Gorin.Result.Tests/Gorin.Result.Tests.csproj" />
+  </Folder>
+</Solution>
